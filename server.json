@@ -1,0 +1,33 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.donnyautomation/geocode-weather-search-markdown",
+  "description": "Six paid utilities for agents: forward and reverse geocoding, weather forecast, web search, URL-to-Markdown, and cryptographic randomness. $0.01 USDC per call on Base via x402; you supply the wallet.",
+  "repository": {
+    "url": "https://github.com/donnywin85/agent-utils-mcp",
+    "source": "github"
+  },
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "agent-utils-mcp",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "EVM_PRIVATE_KEY",
+          "description": "Your Base-mainnet buyer wallet private key (0x-prefixed). Fund with a few dollars of USDC on Base; needs zero ETH. Use a low-balance disposable wallet — this value sits in your client config in plaintext. Pays $0.01 USDC per call.",
+          "isRequired": true,
+          "isSecret": true
+        },
+        {
+          "name": "GATEWAY_URL",
+          "description": "Optional override of the gateway base URL. Defaults to https://x402.donnyautomation.com",
+          "isRequired": false
+        }
+      ]
+    }
+  ]
+}

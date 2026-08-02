@@ -1,0 +1,53 @@
+{
+  "name": "agent-utils-mcp",
+  "mcpName": "com.donnyautomation/geocode-weather-search-markdown",
+  "version": "0.1.0",
+  "description": "MCP server exposing six general-purpose agent utilities — forward/reverse geocoding, weather forecast, web search, URL-to-Markdown, and cryptographic randomness — paid per call ($0.01 USDC on Base) via x402. The buyer's wallet key comes from the installing user's own env; no keys are bundled.",
+  "type": "module",
+  "bin": {
+    "agent-utils-mcp": "src/index.mjs"
+  },
+  "files": [
+    "src/",
+    "README.md",
+    ".env.example"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node src/index.mjs",
+    "selftest": "node test/live-call-test.mjs",
+    "listtools": "node test/list-tools-test.mjs"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "x402",
+    "geocode",
+    "geocoding",
+    "weather",
+    "forecast",
+    "web-search",
+    "search",
+    "markdown",
+    "readability",
+    "agent",
+    "usdc",
+    "base",
+    "pay-per-call"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/donnywin85/agent-utils-mcp.git"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@x402/core": "^2.17.0",
+    "@x402/evm": "^2.17.0",
+    "@x402/fetch": "^2.17.0",
+    "viem": "^2.21.0",
+    "zod": "^4.0.0"
+  }
+}
