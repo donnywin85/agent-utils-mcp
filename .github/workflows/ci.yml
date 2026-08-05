@@ -1,0 +1,44 @@
+name: ci
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # Every tracked source file, not a hand-maintained list — adding a file and
+      # remembering to name it here are two separate acts, and only one of them
+      # is required to ship.
+      - name: syntax check (every tracked .mjs/.js)
+        run: |
+          set -euo pipefail
+          files=$(git ls-files '*.mjs' '*.js')
+          [ -n "$files" ] || { echo "::error::no source files matched — the glob is wrong"; exit 1; }
+          echo "$files" | while read -r f; do node --check "$f"; done
+          echo "checked $(echo "$files" | wc -l) file(s)"
+      # Listing must work with NO key configured: an agent has to see what is on
+      # offer before it funds a wallet. Also asserts each tool quotes the price
+      # from the shared table rather than a constant — the previous version
+      # hardcoded the same stale $0.01 the server did, so it agreed with the bug.
+      - name: tool listing (no key, no network)
+        run: node test/list-tools-test.mjs
+      # The MCP registry PINS an exact version, so a mismatch between the three
+      # places this package states its identity advertises a build that does not
+      # exist. And "we ship no keys" is a claim about the tarball, so it is
+      # checked against the tarball.
+      - name: packaging (version consistency, no secrets in the tarball)
+        run: node test/packaging-test.mjs
+      # NOT run here: test/price-drift-test.mjs and test/live-call-test.mjs.
+      # Both need the live gateway, and a check that fails because someone
+      # else's service is down teaches you to ignore it. Run `npm run pricecheck`
+      # before publishing instead.

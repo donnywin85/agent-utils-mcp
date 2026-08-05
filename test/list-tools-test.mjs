@@ -14,7 +14,25 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
-const EXPECTED = ['geocode', 'reverse_geocode', 'weather', 'web_search', 'url_to_markdown', 'secure_random'];
+
+// ★ Tool -> gateway route, so the price assertion below reads the SAME table the
+//   server advertises from. This used to assert a hardcoded /\$0\.01 USDC/ — the
+//   identical stale constant the server had — so the test agreed with the bug
+//   and passed throughout. A test that hardcodes the value it is checking is
+//   not checking anything.
+const { PRICES } = await import(path.join(ROOT, 'src', 'index.mjs'))
+  .catch(() => ({ PRICES: null }));
+
+const EXPECTED = {
+  geocode: '/geocode',
+  reverse_geocode: '/reverse-geocode',
+  weather: '/weather',
+  web_search: '/search',
+  url_to_markdown: '/markdown',
+  secure_random: '/random',
+  sanctions_screen: '/sanctions',
+  lei_lookup: '/lei',
+};
 
 let failures = 0;
 const check = (name, pass, detail = '') => {
@@ -34,14 +52,20 @@ await client.connect(transport);
 check('server starts and handshakes with NO key configured', true);
 
 const { tools } = await client.listTools();
-check('tool count', tools.length === EXPECTED.length, `${tools.length} tools`);
+const names = Object.keys(EXPECTED);
+check('tool count', tools.length === names.length, `${tools.length} tools, expected ${names.length}`);
+check('the server exports its price table', PRICES && typeof PRICES === 'object');
 
-for (const name of EXPECTED) {
+for (const name of names) {
   const t = tools.find((x) => x.name === name);
   check(`tool ${name} present`, !!t);
   if (!t) continue;
   check(`  ${name} has a description`, typeof t.description === 'string' && t.description.length > 40);
-  check(`  ${name} states the price`, /\$0\.01 USDC/.test(t.description || ''));
+  const route = EXPECTED[name];
+  const price = PRICES?.[route];
+  check(`  ${name} quotes the table price for ${route}`,
+    !!price && new RegExp(`\\$${price.replace('.', '\\.')} USDC`).test(t.description || ''),
+    price ? `expected $${price}` : `no price declared for ${route}`);
   check(`  ${name} has an input schema`, !!t.inputSchema && typeof t.inputSchema === 'object');
 }
 

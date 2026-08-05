@@ -1,7 +1,11 @@
 # agent-utils-mcp
 
-Six general-purpose utilities for AI agents, exposed as MCP tools and paid
-**$0.01 USDC per call** on Base mainnet via [x402](https://x402.org).
+Eight paid utilities for AI agents, exposed as MCP tools and billed per call in
+USDC on Base mainnet via [x402](https://x402.org): **$0.003** for the utility
+tools, **$0.03** for the two compliance tools (OFAC screening, GLEIF LEI).
+
+Prices live in one table in `src/index.mjs`; `npm run pricecheck` compares it
+against the gateway's own `/openapi.json` and fails on any drift.
 
 | tool | what it does |
 |---|---|
@@ -49,7 +53,7 @@ Every tool returns the upstream JSON plus, on a successful payment, the
 settlement transaction hash:
 
 ```
-(paid $0.01 USDC — settle tx 0xb2397b96…)
+(paid $0.003 USDC — settle tx 0xb2397b96…)
 ```
 
 That is deliberate: you can verify on Basescan that you were charged once, for
@@ -57,7 +61,7 @@ what you got, rather than taking the server's word for it.
 
 ## Design notes
 
-These six were not chosen by guesswork. They are the categories that USDC
+The first six were not chosen by guesswork. They are the categories that USDC
 receipts across 1,062 x402 seller wallets showed agents actually pay for —
 geocoding (56 payers), weather (21), article/PDF→Markdown (7), randomness (6),
 web search (6).
