@@ -25,26 +25,28 @@ const getClient = () => (client ??= createPaidClient());
 
 // ★ ONE TABLE, AND A TEST THAT COMPARES IT TO THE LIVE GATEWAY.
 //
-//   Every tool description used to end in a hardcoded "Costs $0.01 USDC per
-//   call", and the receipt line said "(paid $0.01 USDC …)" no matter what had
-//   actually been paid. Both were wrong: these routes cost $0.003, and the
-//   gateway introduced a $0.03 compliance tier on 2026-08-05. A price quoted in
-//   a tool description is a promise an agent plans against, and a receipt that
-//   states an amount nobody charged is simply a false statement.
+//   Every tool description used to end in a price hardcoded into the string,
+//   and the receipt line stated an amount no matter what had actually been
+//   paid. A price quoted in a tool description is a promise an agent plans
+//   against, and a receipt that states an amount nobody charged is simply a
+//   false statement.
+//
+//   These values were read from the gateway's own /openapi.json on 2026-09-07,
+//   route by route — never from a README or a brief, both of which were wrong.
 //
 //   So prices live here once, and `npm run pricecheck` fetches the gateway's
 //   own /openapi.json and fails if any entry disagrees. The two surfaces cannot
 //   drift silently, which is the same rule the gateway applies to its 402s and
 //   its discovery document.
 export const PRICES = {
-  '/geocode': '0.003',
-  '/reverse-geocode': '0.003',
-  '/weather': '0.003',
-  '/search': '0.003',
-  '/markdown': '0.003',
-  '/random': '0.003',
+  '/geocode': '0.01',
+  '/reverse-geocode': '0.01',
+  '/weather': '0.01',
+  '/search': '0.01',
+  '/markdown': '0.01',
+  '/random': '0.01',
   '/lei': '0.03',
-  '/sanctions': '0.03',
+  '/sanctions': '0.01',
 };
 
 const priceLine = (routePath) =>

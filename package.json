@@ -2,7 +2,7 @@
   "name": "agent-utils-mcp",
   "mcpName": "com.donnyautomation/geocode-weather-search-markdown",
   "version": "0.1.0",
-  "description": "MCP server exposing eight paid agent utilities — forward/reverse geocoding, weather forecast, web search, URL-to-Markdown, cryptographic randomness, OFAC sanctions screening and GLEIF LEI lookup — paid per call in USDC on Base ($0.003 utilities, $0.03 compliance) via x402. The buyer's wallet key comes from the installing user's own env; no keys are bundled.",
+  "description": "MCP server exposing eight paid agent utilities — forward/reverse geocoding, weather forecast, web search, URL-to-Markdown, cryptographic randomness, OFAC sanctions screening and GLEIF LEI lookup — paid per call in USDC on Base ($0.01 utilities, $0.03 compliance) via x402. The buyer's wallet key comes from the installing user's own env; no keys are bundled.",
   "type": "module",
   "bin": {
     "agent-utils-mcp": "src/index.mjs"

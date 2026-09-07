@@ -26,22 +26,21 @@ claude mcp add agent-utils --env EVM_PRIVATE_KEY=0xyour_disposable_base_key -- n
 
 | tool | what it does | price |
 |---|---|---|
-| `geocode` | address or place name → coordinates, with ranked candidates | $0.003 |
-| `reverse_geocode` | coordinates → street address | $0.003 |
-| `weather` | current conditions + up to a 7-day forecast for any coordinates | $0.003 |
-| `web_search` | free-text query → ranked organic results (no ads) | $0.003 |
-| `url_to_markdown` | article or PDF URL → clean Markdown | $0.003 |
-| `secure_random` | CSPRNG bytes, or uniform integers in a range | $0.003 |
-| `sanctions_screen` | OFAC SDN / consolidated sanctions screening for a name | $0.01 — see note |
+| `geocode` | address or place name → coordinates, with ranked candidates | $0.01 |
+| `reverse_geocode` | coordinates → street address | $0.01 |
+| `weather` | current conditions + up to a 7-day forecast for any coordinates | $0.01 |
+| `web_search` | free-text query → ranked organic results (no ads) | $0.01 |
+| `url_to_markdown` | article or PDF URL → clean Markdown | $0.01 |
+| `secure_random` | CSPRNG bytes, or uniform integers in a range | $0.01 |
+| `sanctions_screen` | OFAC SDN / consolidated sanctions screening for a name | $0.01 |
 | `lei_lookup` | GLEIF Legal Entity Identifier for a company | $0.03 |
 
 Prices live in one table in `src/index.mjs`; `npm run pricecheck` compares it
 against the gateway's own `/openapi.json` and fails on any drift.
 
-> **Known drift, stated rather than hidden:** as of 2026-08-21 `npm run pricecheck`
-> reports `/sanctions` advertised at $0.03 while the gateway charges **$0.01**. You
-> are charged the gateway's price, so this errs in your favour — but the table is
-> wrong until that is reconciled, and the check is red on purpose.
+> These figures were read from the gateway's `/openapi.json` on 2026-09-07 and
+> `npm run pricecheck` passed against it on the same run. You are charged the
+> gateway's price, not this table's — re-run the check before trusting it.
 
 ## You supply the wallet. This package ships no keys.
 
@@ -90,7 +89,7 @@ Every tool returns the upstream JSON plus, on a successful payment, the
 settlement transaction hash:
 
 ```
-(paid $0.003 USDC — settle tx 0xb2397b96…)
+(paid $0.01 USDC — settle tx 0xb2397b96…)
 ```
 
 That is deliberate: you can verify on Basescan that you were charged once, for

@@ -3,9 +3,9 @@
 //
 // WHY THIS EXISTS. Every tool description used to end in a hardcoded
 // "Costs $0.01 USDC per call", and the receipt line said "(paid $0.01 USDC …)"
-// regardless of what had actually been paid. Both were wrong by more than 3x:
-// these routes cost $0.003, and on 2026-08-05 the gateway introduced a $0.03
-// compliance tier. Nothing anywhere connected the two numbers.
+// regardless of what had actually been paid, and nothing anywhere connected
+// the quoted number to the charged one. The gateway has repriced since — twice
+// — and each time the package's table went stale in silence.
 //
 // A price in a tool description is a promise an agent plans against, and a
 // receipt stating an amount nobody charged is a false statement. So this fetches
@@ -50,8 +50,8 @@ for (const [route, price] of declared) {
   if (!op) { check(`${route} exists in the gateway catalogue`, false, 'route absent from /openapi.json'); continue; }
   const live = op['x-payment-info']?.price?.amount;
   if (live == null) { check(`${route} publishes a price`, false, 'no x-payment-info.price.amount'); continue; }
-  // Compare NUMERICALLY: the gateway publishes "0.003000" and we declare
-  // "0.003". A string compare would fail on formatting and train us to ignore it.
+  // Compare NUMERICALLY: the gateway publishes "0.010000" and we declare
+  // "0.01". A string compare would fail on formatting and train us to ignore it.
   const same = Number(live) === Number(price);
   check(`${route} advertised $${price} matches gateway $${Number(live)}`, same,
     same ? '' : `DRIFT — agents are being quoted ${price}, they will be charged ${Number(live)}`);
